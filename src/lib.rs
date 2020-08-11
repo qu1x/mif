@@ -1,5 +1,16 @@
 //! Memory Initialization File
 //!
+//! # Library
+//!
+//! MIF creation and serialization is implemented via the `Mif` structure.
+//!
+//! Disable default features like `cli` to reduce dependencies:
+//!
+//! ```toml
+//! [dependencies]
+//! mif = { version = "0.1", default-features = false }
+//! ```
+//!
 //! # Command-line Utility
 //!
 //! Provides two subcommands, `dump` and `join`.
@@ -118,7 +129,6 @@ use std::{
 	fmt::UpperHex,
 	str::FromStr,
 };
-use toml::from_str;
 use serde::Deserialize;
 use indexmap::IndexMap;
 use num_traits::{int::PrimInt, cast::FromPrimitive};
@@ -170,6 +180,7 @@ pub fn dump(
 }
 
 /// Load TOML from file or standard input `"-"` as `Files`.
+#[cfg(feature = "cli")]
 pub fn load(input: &dyn AsRef<Path>) -> Result<Files> {
 	let input = input.as_ref();
 	let mut file: Box<dyn Read> = if input == Path::new("-") {
@@ -181,7 +192,7 @@ pub fn load(input: &dyn AsRef<Path>) -> Result<Files> {
 	let mut string = String::new();
 	file.read_to_string(&mut string)
 		.with_context(|| format!("Cannot read `{}`", input.display()))
-	.and_then(|_count| from_str::<Files>(&string)
+	.and_then(|_count| toml::from_str::<Files>(&string)
 		.with_context(|| format!("Cannot load `{}`", input.display())))
 }
 

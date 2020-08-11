@@ -35,7 +35,7 @@ path = "src/lib.rs"
 [[bin]]
 name = "mif"
 path = "src/main.rs"
-required-features = ["bin"]
+required-features = ["cli"]
 
 [dependencies]
 serde = { version = "1", features = ["derive"] }
@@ -47,5 +47,5 @@ clap = { version = "3.0.0-beta.1", optional = true }
 toml = { version = "0.5", features = ["preserve_order"], optional = true }
 
 [features]
-default = ["bin"]
-bin = ["clap", "toml"]
+default = ["cli"]
+cli = ["clap", "toml"]

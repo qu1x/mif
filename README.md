@@ -1,22 +1,31 @@
-# mif
-
-Memory Initialization File
-
 [![Build Status][]](https://travis-ci.org/qu1x/mif)
 [![Downloads][]](https://crates.io/crates/mif)
 [![Rust][]](https://www.rust-lang.org)
 [![Version][]](https://crates.io/crates/mif)
 [![Documentation][]](https://docs.rs/mif)
-[![MIT][]](https://opensource.org/licenses/MIT)
-[![Apache-2.0][]](https://opensource.org/licenses/Apache-2.0)
+[![License][]](https://opensource.org/licenses)
 
 [Build Status]: https://travis-ci.org/qu1x/mif.svg
 [Downloads]: https://img.shields.io/crates/d/mif.svg
 [Rust]: https://img.shields.io/badge/rust-stable-brightgreen.svg
 [Version]: https://img.shields.io/crates/v/mif.svg
 [Documentation]: https://docs.rs/mif/badge.svg
-[MIT]: https://img.shields.io/badge/License-MIT-blue.svg
-[Apache-2.0]: https://img.shields.io/badge/License-Apache--2.0-blue.svg
+[License]: https://img.shields.io/badge/License-MIT%20OR%20Apache--2.0-blue.svg
+
+# mif
+
+Memory Initialization File
+
+## Library
+
+MIF creation and serialization is implemented via the `Mif` structure.
+
+Disable default features like `cli` to reduce dependencies:
+
+```toml
+[dependencies]
+mif = { version = "0.1", default-features = false }
+```
 
 ## Command-line Utility
 
