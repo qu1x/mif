@@ -3,8 +3,13 @@ env: FEATURES=""
 matrix:
   include:
     - rust: stable
+    - rust: stable
+      env: FEATURES="cli"
     - rust: beta
+    - rust: beta
+      env: FEATURES="cli"
     - rust: nightly
+    - rust: nightly
+      env: FEATURES="cli"
 script:
-  - cargo build --verbose --features "$FEATURES"
-  - cargo test --verbose --features "$FEATURES"
+  - cargo test --verbose  --no-default-features --features "$FEATURES"
