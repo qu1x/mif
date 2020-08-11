@@ -1,0 +1,51 @@
+[package]
+name = "mif"
+version = "0.1.0"
+authors = ["Rouven Spreckels <rs@qu1x.dev>"]
+edition = "2018"
+description = "Memory Initialization File"
+documentation = "https://docs.rs/mif"
+repository = "https://github.com/qu1x/mif"
+readme = "README.md"
+license = "MIT OR Apache-2.0"
+keywords = [
+	"intel-quartus-prime",
+	"mif-dump",
+	"mif-join",
+]
+categories = [
+	"encoding",
+	"development-tools",
+	"command-line-utilities",
+]
+include = [
+	"src/**/*.rs",
+	"Cargo.toml",
+	"README.md",
+	"RELEASES.md",
+]
+
+[badges]
+travis-ci = { repository = "qu1x/mif" }
+
+[lib]
+name = "mif"
+path = "src/lib.rs"
+
+[[bin]]
+name = "mif"
+path = "src/main.rs"
+required-features = ["bin"]
+
+[dependencies]
+serde = { version = "1", features = ["derive"] }
+indexmap = { version = "1", features = ["serde-1"] }
+num-traits = "0.2"
+byteorder = "1"
+anyhow = "1"
+clap = { version = "3.0.0-beta.1", optional = true }
+toml = { version = "0.5", features = ["preserve_order"], optional = true }
+
+[features]
+default = ["bin"]
+bin = ["clap", "toml"]
