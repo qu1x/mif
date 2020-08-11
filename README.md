@@ -27,12 +27,12 @@ Disable default features like `cli` to reduce dependencies:
 mif = { version = "0.1", default-features = false }
 ```
 
-## Command-line Utility
+## Command-line Interface
 
 Provides two subcommands, `dump` and `join`.
 
 ```text
-mif 0.1.0
+mif 0.1.1
 Rouven Spreckels <rs@qu1x.dev>
 Memory Initialization File
 
