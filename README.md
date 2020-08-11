@@ -22,7 +22,7 @@ Memory Initialization File
 
 Provides two subcommands, `dump` and `join`.
 
-```
+```text
 mif 0.1.0
 Rouven Spreckels <rs@qu1x.dev>
 Memory Initialization File
@@ -42,7 +42,7 @@ SUBCOMMANDS:
 
 ### Dump Subcommand
 
-```
+```text
 mif-dump
 Dumps binary as MIF
 
@@ -61,7 +61,7 @@ OPTIONS:
 
 ### Join Subcommand
 
-```
+```text
 mif-join
 Joins binaries' memory areas to MIFs
 
