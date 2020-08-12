@@ -38,7 +38,7 @@ pub fn open(input: &dyn AsRef<Path>) -> Result<(Box<dyn Read>, usize)> {
 ///   * `lines`: Writer, MIF is written to.
 ///   * `bytes`: Reader, bytes are read from.
 ///   * `count`: Count of bytes to read.
-///   * `width`: Word width in bits from 8 to 128.
+///   * `width`: Word width in bits from 1 to 128.
 ///   * `first`: LSB/MSB first (little/big-endian).
 pub fn dump(
 	lines: &mut dyn Write,
@@ -140,7 +140,7 @@ pub struct Area {
 	/// LSB/MSB first (little/big-endian).
 	#[serde(default)]
 	pub first: First,
-	/// Word width in bits from 8 to 128.
+	/// Word width in bits from 1 to 128.
 	#[serde(default = "default_width")]
 	pub width: usize,
 	/// Depth in words.

@@ -1,3 +1,7 @@
+# Version 0.2.1 (2020-08-12)
+
+  * Allow word width smaller than 8 bits.
+
 # Version 0.2.0 (2020-08-12)
 
   * Refactor, add `cli` feature.

@@ -42,7 +42,7 @@ Default features:
 Provides two subcommands, `dump` and `join`.
 
 ```text
-mif 0.2.0
+mif 0.2.1
 Rouven Spreckels <rs@qu1x.dev>
 Memory Initialization File
 
@@ -72,7 +72,7 @@ ARGS:
     <input>    Input file or standard input (-) [default: -]
 
 OPTIONS:
-    -w, --width <bits>       Word width in bits from 8 to 128 [default: 16]
+    -w, --width <bits>       Word width in bits from 1 to 128 [default: 16]
     -f, --first <lsb|msb>    LSB/MSB first (little/big-endian) [default: lsb]
     -h, --help               Prints help information
     -V, --version            Prints version information

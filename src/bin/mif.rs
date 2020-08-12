@@ -26,7 +26,7 @@ enum Mif {
 		/// Input file or standard input (-).
 		#[clap(default_value = "-")]
 		input: PathBuf,
-		/// Word width in bits from 8 to 128.
+		/// Word width in bits from 1 to 128.
 		#[clap(short = "w", long = "width", value_name = "bits")]
 		#[clap(default_value = "16")]
 		width: usize,
