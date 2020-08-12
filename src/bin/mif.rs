@@ -1,4 +1,4 @@
-//! Memory Initialization File
+//! `mif` binary.
 
 #![forbid(unsafe_code)]
 #![forbid(missing_docs)]
@@ -6,8 +6,8 @@
 use std::{path::PathBuf, io::stdout};
 use clap::{crate_version, crate_authors, Clap, AppSettings};
 use anyhow::Result;
-use mif::{First, open, dump, load, join};
-use Mif::*;
+use mif::{First, cli::{open, dump, load, join}};
+use Mif::{Dump, Join};
 
 /// Memory Initialization File.
 #[derive(Clap)]

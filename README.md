@@ -20,19 +20,29 @@ Memory Initialization File
 
 MIF creation and serialization is implemented via the `Mif` structure.
 
-Disable default features like `cli` to reduce dependencies:
+Disable default features like `cli` and `bin` to reduce dependencies:
 
 ```toml
 [dependencies]
-mif = { version = "0.1", default-features = false }
+mif = { version = "0.2", default-features = false }
 ```
+
+Default features:
+
+  * `cli`: Provides command-line interface functionality of `mif` binary.
+
+    Requires: `indexmap`, `serde`, `toml`
+
+  * `bin`: Enables compilation of `mif` binary.
+
+    Requires: `cli`, `clap`
 
 ## Command-line Interface
 
 Provides two subcommands, `dump` and `join`.
 
 ```text
-mif 0.1.1
+mif 0.2.0
 Rouven Spreckels <rs@qu1x.dev>
 Memory Initialization File
 

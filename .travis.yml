@@ -5,11 +5,17 @@ matrix:
     - rust: stable
     - rust: stable
       env: FEATURES="cli"
+    - rust: stable
+      env: FEATURES="bin"
     - rust: beta
     - rust: beta
       env: FEATURES="cli"
+    - rust: beta
+      env: FEATURES="bin"
     - rust: nightly
     - rust: nightly
       env: FEATURES="cli"
+    - rust: nightly
+      env: FEATURES="bin"
 script:
-  - cargo test --verbose  --no-default-features --features "$FEATURES"
+  - cargo test --verbose --no-default-features --features "$FEATURES"

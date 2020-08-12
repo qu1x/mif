@@ -1,6 +1,6 @@
 [package]
 name = "mif"
-version = "0.1.1"
+version = "0.2.0"
 authors = ["Rouven Spreckels <rs@qu1x.dev>"]
 edition = "2018"
 description = "Memory Initialization File"
@@ -34,18 +34,19 @@ path = "src/lib.rs"
 
 [[bin]]
 name = "mif"
-path = "src/main.rs"
-required-features = ["cli"]
+path = "src/bin/mif.rs"
+required-features = ["bin"]
 
 [dependencies]
-serde = { version = "1", features = ["derive"] }
-indexmap = { version = "1", features = ["serde-1"] }
 num-traits = "0.2"
 byteorder = "1"
 anyhow = "1"
-clap = { version = "3.0.0-beta.1", optional = true }
+indexmap = { version = "1", features = ["serde-1"], optional = true }
+serde = { version = "1", features = ["derive"], optional = true }
 toml = { version = "0.5", features = ["preserve_order"], optional = true }
+clap = { version = "3.0.0-beta.1", optional = true }
 
 [features]
-default = ["cli"]
-cli = ["clap", "toml"]
+default = ["bin"]
+cli = ["indexmap", "serde", "toml"]
+bin = ["cli", "clap"]
