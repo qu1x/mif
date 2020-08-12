@@ -229,9 +229,9 @@ pub fn join(
 						abs_path.push(mif_path);
 						let mif_file = OpenOptions::new()
 							.write(true).create(true).truncate(true)
-							.open(&mif_path).map(BufWriter::new)
+							.open(&abs_path).map(BufWriter::new)
 							.with_context(|| format!("Cannot open `{}`",
-								mif_path.display()))?;
+								abs_path.display()))?;
 						let mif = (mif_file, Mif::new(width)?);
 						assert!(mifs.insert(mif_path.clone(), mif).is_none());
 					}
