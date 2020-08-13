@@ -1,5 +1,18 @@
 //! Memory Initialization File
 //!
+//! # Features
+//!
+//!  * Creates MIFs in native representation by appending bulks of words,
+//!    internally stored as `Vec<(word: T, bulk: usize)>`.
+//!      * New word is same: Add up bulk (number of words).
+//!      * New word is different: Append word of given bulk.
+//!  * Verifies word (value) fits into MIF's chosen word width in bits.
+//!  * Joins multiple MIFs of different word widths as long as words fit.
+//!  * Writes MIFs while collapsing sequences of same words.
+//!  * Optionally comments join offsets in words with custom (file) names.
+//!  * Provides simple `mif dump` subcommand.
+//!  * Provides reproducible `mif join` subcommand with TOML instruction file.
+//!
 //! # Library
 //!
 //! MIF creation and serialization is implemented for the `Mif` structure.
