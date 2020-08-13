@@ -18,8 +18,8 @@ Memory Initialization File
 
 ## Features
 
-  * Creates MIFs in native representation by appending bulks of words,
-    internally stored as `Vec<(word: T, bulk: usize)>`.
+  * Creates MIFs in native representation by appending bulks of words, stored
+    as `Vec<(word: T, bulk: usize)>`:
       * New word is same: Add up bulk (number of words).
       * New word is different: Append word of given bulk.
   * Verifies word (value) fits into MIF's chosen word width in bits.
