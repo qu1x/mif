@@ -2,7 +2,7 @@
 //!
 //! # Library
 //!
-//! MIF creation and serialization is implemented via the `Mif` structure.
+//! MIF creation and serialization is implemented for the `Mif` structure.
 //!
 //! Disable default features like `cli` and `bin` to reduce dependencies:
 //!
@@ -22,6 +22,8 @@
 //!     Requires: `cli`, `clap`
 //!
 //! # Command-line Interface
+//!
+//! Install via `cargo install mif`.
 //!
 //! Provides two subcommands, `dump` and `join`.
 //!

@@ -74,8 +74,8 @@ pub fn load(input: &dyn AsRef<Path>) -> Result<Files> {
 /// Joins memory areas of binary `Files` as MIFs.
 ///
 ///   * `files`: Binary files split into memory areas, see `Files`.
-///   * `areas`: Whether to comment memory areas, see `write()`.
 ///   * `paths`: Prefix paths for input binaries and output MIFs in given order.
+///   * `areas`: Whether to comment memory areas, see `write()`.
 pub fn join(
 	files: &Files,
 	paths: (&dyn AsRef<Path>, &dyn AsRef<Path>),
