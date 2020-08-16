@@ -37,14 +37,14 @@ Disable default features like `cli` and `bin` to reduce dependencies:
 
 ```toml
 [dependencies]
-mif = { version = "0.2", default-features = false }
+mif = { version = "0.3", default-features = false }
 ```
 
 Default features:
 
   * `cli`: Provides command-line interface functionality of `mif` binary.
 
-    Requires: `indexmap`, `serde`, `toml`
+    Requires: `anyhow`, `indexmap`, `serde`, `toml`
 
   * `bin`: Enables compilation of `mif` binary.
 
@@ -57,7 +57,7 @@ Install via `cargo install mif`.
 Provides two subcommands, `dump` and `join`.
 
 ```text
-mif 0.2.1
+mif 0.3.0
 Rouven Spreckels <rs@qu1x.dev>
 Memory Initialization File
 

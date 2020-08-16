@@ -21,14 +21,14 @@
 //!
 //! ```toml
 //! [dependencies]
-//! mif = { version = "0.2", default-features = false }
+//! mif = { version = "0.3", default-features = false }
 //! ```
 //!
 //! Default features:
 //!
 //!   * `cli`: Provides command-line interface functionality of `mif` binary.
 //!
-//!     Requires: `indexmap`, `serde`, `toml`
+//!     Requires: `anyhow`, `indexmap`, `serde`, `toml`
 //!
 //!   * `bin`: Enables compilation of `mif` binary.
 //!
@@ -41,7 +41,7 @@
 //! Provides two subcommands, `dump` and `join`.
 //!
 //! ```text
-//! mif 0.2.1
+//! mif 0.3.0
 //! Rouven Spreckels <rs@qu1x.dev>
 //! Memory Initialization File
 //!
@@ -153,31 +153,78 @@ pub mod cli;
 use serde::Deserialize;
 
 use std::{
+	mem::size_of,
 	path::PathBuf,
-	io::{Read, Write},
+	io::{self, Read, Write},
+	result,
 	fmt::UpperHex,
 	str::FromStr,
 };
-use num_traits::{int::PrimInt, cast::FromPrimitive};
+use num_traits::{
+	sign::Unsigned, int::PrimInt, cast::FromPrimitive,
+	ops::{checked::CheckedShl, wrapping::WrappingSub},
+};
 use byteorder::{LE, BE, ReadBytesExt};
-use anyhow::{Error, Result, anyhow, ensure};
+use thiserror::Error;
 use First::{Lsb, Msb};
+use Error::*;
+
+type Result<T> = result::Result<T, Error>;
+
+/// `Mif` errors.
+#[derive(Error, Debug)]
+#[non_exhaustive]
+pub enum Error {
+	/// Neither `"lsb"` nor `"msb"` first.
+	#[error("Valid values are `lsb` and `msb`")]
+	InvalidFirst,
+	/// Width exceeds `[1, Mif::max_width()]`
+	#[error("Width `{0}` out of `[1, {1}]`")]
+	WidthOutOfRange(usize, usize),
+	/// Word value exceeds `Mif::max_value()`.
+	#[error("Word value out of width")]
+	ValueOutOfWidth,
+	/// Less words read than expected.
+	#[error("Depth `{1}` truncated after `{0}` words")]
+	TruncatedDepth(usize, usize),
+	/// I/O error.
+	#[error(transparent)]
+	IoError(#[from] io::Error),
+}
 
 /// Native MIF representation.
 #[derive(Debug, Eq, PartialEq, Clone)]
-pub struct Mif<T: UpperHex + PrimInt + FromPrimitive> {
+pub struct Mif<T: UpperHex + Unsigned + PrimInt + FromPrimitive> {
 	width: usize,
 	depth: usize,
 	words: Vec<(T, usize)>,
 	areas: Vec<(usize, PathBuf)>,
 }
 
-impl<T: UpperHex + PrimInt + FromPrimitive> Mif<T> {
+impl<T> Mif<T>
+where
+	T: UpperHex + Unsigned + PrimInt + FromPrimitive + CheckedShl + WrappingSub,
+{
 	/// Creates new MIF with word `width`.
 	pub fn new(width: usize) -> Result<Mif<T>> {
-		ensure!((1..=128).contains(&width),
-			"Word width {} out of [1, 128]", width);
-		Ok(Mif { words: Vec::new(), depth: 0, areas: Vec::new(), width })
+		if (1..=Self::max_width()).contains(&width) {
+			Ok(Mif { words: Vec::new(), depth: 0, areas: Vec::new(), width })
+		} else {
+			Err(WidthOutOfRange(width, Self::max_width()))
+		}
+	}
+	/// Maximum word width in bits depending on `T`.
+	pub fn max_width() -> usize {
+		Self::max_align() * 8
+	}
+	/// Maximum word width in bytes depending on `T`.
+	pub fn max_align() -> usize {
+		size_of::<T>()
+	}
+	/// Maximum word value depending on `width()`.
+	pub fn max_value(&self) -> T {
+		T::one().checked_shl(self.width as u32)
+			.unwrap_or(T::zero()).wrapping_sub(&T::one())
 	}
 	/// Word width in bits.
 	pub fn width(&self) -> usize {
@@ -210,8 +257,9 @@ impl<T: UpperHex + PrimInt + FromPrimitive> Mif<T> {
 			Some((last_word, last_bulk)) if *last_word == word =>
 				*last_bulk += bulk,
 			_ => {
-				ensure!(word < T::one().unsigned_shl(self.width as u32),
-					"Word exceeds width");
+				if word > self.max_value() {
+					Err(ValueOutOfWidth)?;
+				}
 				if bulk > 0 {
 					self.words.push((word, bulk))
 				}
@@ -233,11 +281,12 @@ impl<T: UpperHex + PrimInt + FromPrimitive> Mif<T> {
 				Lsb => bytes.read_uint128::<LE>(align),
 				Msb => bytes.read_uint128::<BE>(align),
 			}?;
-			self.push(T::from_u128(word)
-				.ok_or(anyhow!("Word larger than width"))?, 1)?;
+			self.push(T::from_u128(word).ok_or(ValueOutOfWidth)?, 1)?;
 			words += 1;
 		}
-		ensure!(depth == words, "Not enough words");
+		if depth != words {
+			Err(TruncatedDepth(words, depth))?;
+		}
 		Ok(())
 	}
 	/// Writes MIF to writer.
@@ -300,7 +349,7 @@ impl FromStr for First {
 		match from {
 			"lsb" => Ok(Lsb),
 			"msb" => Ok(Msb),
-			_ => Err(anyhow!("Valid values are `lsb` and `msb`")),
+			_ => Err(InvalidFirst),
 		}
 	}
 }
