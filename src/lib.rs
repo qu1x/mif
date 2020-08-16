@@ -177,16 +177,16 @@ type Result<T> = result::Result<T, Error>;
 pub enum Error {
 	/// Neither `"lsb"` nor `"msb"` first.
 	#[error("Valid values are `lsb` and `msb`")]
-	InvalidFirst,
+	NeitherLsbNorMsbFirst,
 	/// Width exceeds `[1, Mif::max_width()]`
-	#[error("Width `{0}` out of `[1, {1}]`")]
+	#[error("Width {0} out of [1, {1}]")]
 	WidthOutOfRange(usize, usize),
 	/// Word value exceeds `Mif::max_value()`.
-	#[error("Word value out of width")]
-	ValueOutOfWidth,
+	#[error("Word at depth {0} out of width {1}")]
+	ValueOutOfWidth(usize, usize),
 	/// Less words read than expected.
-	#[error("Depth `{1}` truncated after `{0}` words")]
-	TruncatedDepth(usize, usize),
+	#[error("Missing {0} words")]
+	MissingWords(usize),
 	/// I/O error.
 	#[error(transparent)]
 	IoError(#[from] io::Error),
@@ -252,19 +252,19 @@ where
 	}
 	/// Pushes `word` or add up its `bulk`.
 	pub fn push(&mut self, word: T, bulk: usize) -> Result<()> {
-		self.depth += bulk;
 		match self.words.last_mut() {
 			Some((last_word, last_bulk)) if *last_word == word =>
 				*last_bulk += bulk,
 			_ => {
 				if word > self.max_value() {
-					Err(ValueOutOfWidth)?;
+					Err(ValueOutOfWidth(self.depth, self.width()))?;
 				}
 				if bulk > 0 {
 					self.words.push((word, bulk))
 				}
 			},
 		}
+		self.depth += bulk;
 		Ok(())
 	}
 	/// Joins in `other` MIF.
@@ -281,11 +281,12 @@ where
 				Lsb => bytes.read_uint128::<LE>(align),
 				Msb => bytes.read_uint128::<BE>(align),
 			}?;
-			self.push(T::from_u128(word).ok_or(ValueOutOfWidth)?, 1)?;
+			self.push(T::from_u128(word)
+				.ok_or(ValueOutOfWidth(words, self.width))?, 1)?;
 			words += 1;
 		}
 		if depth != words {
-			Err(TruncatedDepth(words, depth))?;
+			Err(MissingWords(depth - words))?;
 		}
 		Ok(())
 	}
@@ -349,7 +350,7 @@ impl FromStr for First {
 		match from {
 			"lsb" => Ok(Lsb),
 			"msb" => Ok(Msb),
-			_ => Err(InvalidFirst),
+			_ => Err(NeitherLsbNorMsbFirst),
 		}
 	}
 }
