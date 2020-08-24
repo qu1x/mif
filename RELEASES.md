@@ -1,7 +1,7 @@
-# Version 0.3.0 (2020-08-16)
+# Version 0.3.0 (2020-08-24)
 
   * Use `thiserror` for `Mif` making `anyhow` optional with `cli` feature.
-  * Fix check of whether word value exceeds width for byte-aligned widths.
+  * Fix check of whether word value exceeds width for `size_of::<T>()` widths.
 
 # Version 0.2.1 (2020-08-12)
 
