@@ -2,16 +2,14 @@
 //!
 //! # Features
 //!
-//!  * Creates MIFs in native representation by appending bulks of words, stored
-//!    as `Vec<(word: T, bulk: usize)>`:
-//!      * New word is same: Add up bulk (number of words).
-//!      * New word is different: Append word of given bulk.
-//!  * Verifies word (value) fits into MIF's chosen word width in bits.
-//!  * Joins multiple MIFs of different word widths as long as words fit.
-//!  * Writes MIFs while collapsing sequences of same words.
-//!  * Optionally comments join offsets in words with custom (file) names.
-//!  * Provides simple `mif dump` subcommand.
-//!  * Provides reproducible `mif join` subcommand with TOML instruction file.
+//!   * Native MIF representation as `Vec<(word: T, bulk: usize)>`.
+//!   * Detects single-word sequence `[first..last]: word` but does **not**
+//!     detect multi-word sequence `[first..last]: words..` in binary data.
+//!   * Verifies word fits into MIF's word width in bits.
+//!   * Joins multiple MIFs of different word widths as long as words fit.
+//!   * Optionally comments join offsets in words with given (file) names.
+//!   * Provides simple `mif dump` subcommand.
+//!   * Provides reproducible `mif join` subcommand via TOML instruction file.
 //!
 //! # Library
 //!
